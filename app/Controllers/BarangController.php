@@ -2,11 +2,10 @@
 
 namespace App\Controllers;
 
-use CodeIgniter\Controller;
 use Config\Database;
 use DateTime;
 
-class BarangController extends Controller
+class BarangController extends BaseController
 {
   protected $db;
 
@@ -23,10 +22,7 @@ class BarangController extends Controller
   {
     $items = $this->db->table('barang')->get()->getResult();
 
-    return $this->response->setJSON([
-      'success' => true,
-      'data'    => $items,
-    ]);
+    return respondSuccess($this->response, $items);
   }
 
   /**
@@ -57,10 +53,7 @@ class BarangController extends Controller
 
     $item = $this->db->table('barang')->where('id', $id)->get()->getRow();
 
-    return $this->response->setJSON([
-      'success' => true,
-      'data'    => $item,
-    ]);
+    return respondSuccess($this->response, $item, null, 201);
   }
 
   /**
@@ -87,10 +80,7 @@ class BarangController extends Controller
 
     $item = $this->db->table('barang')->where('id', $id)->get()->getRow();
 
-    return $this->response->setJSON([
-      'success' => true,
-      'data'    => $item,
-    ]);
+    return respondSuccess($this->response, $item);
   }
 
   /**
@@ -101,9 +91,6 @@ class BarangController extends Controller
   {
     $this->db->table('barang')->where('id', $id)->delete();
 
-    return $this->response->setJSON([
-      'success' => true,
-      'message' => 'Item deleted successfully',
-    ]);
+    return respondSuccess($this->response, null, 'Item deleted successfully');
   }
 }

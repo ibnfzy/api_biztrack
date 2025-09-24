@@ -2,11 +2,10 @@
 
 namespace App\Controllers;
 
-use CodeIgniter\Controller;
 use Config\Database;
 use DateTime;
 
-class StockController extends Controller
+class StockController extends BaseController
 {
   protected $db;
 
@@ -30,10 +29,7 @@ class StockController extends Controller
 
     $stocks = $builder->get()->getResult();
 
-    return $this->response->setJSON([
-      'success' => true,
-      'data'    => $stocks,
-    ]);
+    return respondSuccess($this->response, $stocks);
   }
 
   /**
@@ -49,10 +45,7 @@ class StockController extends Controller
     $type     = $data['type'] ?? 'add';
 
     if (empty($barangId)) {
-      return $this->response->setJSON([
-        'success' => false,
-        'message' => 'barangId is required',
-      ])->setStatusCode(400);
+      return respondBadRequest($this->response, 'barangId is required');
     }
 
     $builder = $this->db->table('stok');
@@ -85,9 +78,6 @@ class StockController extends Controller
 
     $updatedStock = $builder->where('barangId', $barangId)->get()->getRow();
 
-    return $this->response->setJSON([
-      'success' => true,
-      'data'    => $updatedStock,
-    ]);
+    return respondSuccess($this->response, $updatedStock);
   }
 }

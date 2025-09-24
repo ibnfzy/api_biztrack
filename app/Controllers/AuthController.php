@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use CodeIgniter\Controller;
 use Config\Database;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
@@ -10,7 +9,7 @@ use Lcobucci\JWT\Validation\Constraint\ValidAt;
 use Lcobucci\Clock\SystemClock;
 use DateTimeImmutable;
 
-class AuthController extends Controller
+class AuthController extends BaseController
 {
   private $config;
 
@@ -32,10 +31,7 @@ class AuthController extends Controller
     $user = $db->table('users')->where('email', $email)->get()->getRow();
 
     if (!$user || !password_verify($password, $user->password)) {
-      return $this->response->setJSON([
-        'success' => false,
-        'message' => 'Invalid credentials'
-      ]);
+      return respondUnauthorized($this->response, 'Invalid credentials');
     }
 
     $now   = new DateTimeImmutable();
@@ -48,24 +44,18 @@ class AuthController extends Controller
       ->withClaim('role', $user->role)
       ->getToken($this->config->signer(), $this->config->signingKey());
 
-    return $this->response->setJSON([
-      'success' => true,
-      'data' => [
-        'user' => [
-          'id' => $user->id,
-          'email' => $user->email,
-          'role' => $user->role,
-          'token' => $token->toString()
-        ]
+    return respondSuccess($this->response, [
+      'user' => [
+        'id' => $user->id,
+        'email' => $user->email,
+        'role' => $user->role,
+        'token' => $token->toString()
       ]
     ]);
   }
 
   public function logout()
   {
-    return $this->response->setJSON([
-      'success' => true,
-      'message' => 'Logout successful. Please remove token from client storage.'
-    ]);
+    return respondSuccess($this->response, null, 'Logout successful. Please remove token from client storage.');
   }
 }

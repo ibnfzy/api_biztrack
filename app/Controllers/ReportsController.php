@@ -2,11 +2,10 @@
 
 namespace App\Controllers;
 
-use CodeIgniter\Controller;
 use Config\Database;
 use DateTime;
 
-class ReportsController extends Controller
+class ReportsController extends BaseController
 {
     protected $db;
 
@@ -23,10 +22,7 @@ class ReportsController extends Controller
     {
         $reports = $this->fetchReports();
 
-        return $this->response->setJSON([
-            'success' => true,
-            'data'    => $reports,
-        ]);
+        return respondSuccess($this->response, $reports);
     }
 
     /**
@@ -37,10 +33,7 @@ class ReportsController extends Controller
     {
         $reports = $this->fetchReports('penjualan');
 
-        return $this->response->setJSON([
-            'success' => true,
-            'data'    => $reports,
-        ]);
+        return respondSuccess($this->response, $reports);
     }
 
     /**
@@ -51,10 +44,7 @@ class ReportsController extends Controller
     {
         $reports = $this->fetchReports('permintaan');
 
-        return $this->response->setJSON([
-            'success' => true,
-            'data'    => $reports,
-        ]);
+        return respondSuccess($this->response, $reports);
     }
 
     /**
@@ -102,10 +92,7 @@ class ReportsController extends Controller
             $report['data'] = $this->decodeData($report['data'] ?? null);
         }
 
-        return $this->response->setJSON([
-            'success' => true,
-            'data'    => $report,
-        ]);
+        return respondSuccess($this->response, $report, null, 201);
     }
 
     /**
@@ -116,10 +103,7 @@ class ReportsController extends Controller
     {
         $this->db->table('laporan')->where('id', $id)->delete();
 
-        return $this->response->setJSON([
-            'success' => true,
-            'data'    => null,
-        ]);
+        return respondSuccess($this->response, null);
     }
 
     /**

@@ -2,11 +2,10 @@
 
 namespace App\Controllers;
 
-use CodeIgniter\Controller;
 use Config\Database;
 use DateTime;
 
-class DeliveryController extends Controller
+class DeliveryController extends BaseController
 {
     protected $db;
 
@@ -32,10 +31,7 @@ class DeliveryController extends Controller
             $delivery['items'] = $items;
         }
 
-        return $this->response->setJSON([
-            'success' => true,
-            'data'    => $deliveries,
-        ]);
+        return respondSuccess($this->response, $deliveries);
     }
 
     /**
@@ -90,10 +86,7 @@ class DeliveryController extends Controller
                 ->getResultArray();
         }
 
-        return $this->response->setJSON([
-            'success' => true,
-            'data'    => $created,
-        ]);
+        return respondSuccess($this->response, $created, null, 201);
     }
 
     /**
@@ -158,9 +151,6 @@ class DeliveryController extends Controller
                 ->getResultArray();
         }
 
-        return $this->response->setJSON([
-            'success' => true,
-            'data'    => $delivery,
-        ]);
+        return respondSuccess($this->response, $delivery);
     }
 }

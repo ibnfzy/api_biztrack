@@ -2,11 +2,10 @@
 
 namespace App\Controllers;
 
-use CodeIgniter\Controller;
 use Config\Database;
 use DateTime;
 
-class PermintaanController extends Controller
+class PermintaanController extends BaseController
 {
     protected $db;
 
@@ -32,10 +31,7 @@ class PermintaanController extends Controller
             $request['items'] = $items;
         }
 
-        return $this->response->setJSON([
-            'success' => true,
-            'data'    => $requests,
-        ]);
+        return respondSuccess($this->response, $requests);
     }
 
     /**
@@ -86,10 +82,7 @@ class PermintaanController extends Controller
             ->get()
             ->getResultArray();
 
-        return $this->response->setJSON([
-            'success' => true,
-            'data'    => $created,
-        ]);
+        return respondSuccess($this->response, $created, null, 201);
     }
 
     /**
@@ -144,9 +137,6 @@ class PermintaanController extends Controller
                 ->getResultArray();
         }
 
-        return $this->response->setJSON([
-            'success' => true,
-            'data'    => $request,
-        ]);
+        return respondSuccess($this->response, $request);
     }
 }

@@ -2,11 +2,10 @@
 
 namespace App\Controllers;
 
-use CodeIgniter\Controller;
 use Config\Database;
 use DateTime;
 
-class SupplierController extends Controller
+class SupplierController extends BaseController
 {
   protected $db;
 
@@ -23,10 +22,7 @@ class SupplierController extends Controller
   {
     $suppliers = $this->db->table('supplier')->get()->getResult();
 
-    return $this->response->setJSON([
-      'success' => true,
-      'data'    => $suppliers,
-    ]);
+    return respondSuccess($this->response, $suppliers);
   }
 
   /**
@@ -55,10 +51,7 @@ class SupplierController extends Controller
 
     $supplier = $this->db->table('supplier')->where('id', $id)->get()->getRow();
 
-    return $this->response->setJSON([
-      'success' => true,
-      'data'    => $supplier,
-    ]);
+    return respondSuccess($this->response, $supplier, null, 201);
   }
 
   /**
@@ -83,10 +76,7 @@ class SupplierController extends Controller
 
     $supplier = $this->db->table('supplier')->where('id', $id)->get()->getRow();
 
-    return $this->response->setJSON([
-      'success' => true,
-      'data'    => $supplier,
-    ]);
+    return respondSuccess($this->response, $supplier);
   }
 
   /**
@@ -97,9 +87,6 @@ class SupplierController extends Controller
   {
     $this->db->table('supplier')->where('id', $id)->delete();
 
-    return $this->response->setJSON([
-      'success' => true,
-      'message' => 'Supplier deleted successfully',
-    ]);
+    return respondSuccess($this->response, null, 'Supplier deleted successfully');
   }
 }

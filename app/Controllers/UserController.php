@@ -2,11 +2,10 @@
 
 namespace App\Controllers;
 
-use CodeIgniter\Controller;
 use Config\Database;
 use DateTime;
 
-class UserController extends Controller
+class UserController extends BaseController
 {
   protected $db;
 
@@ -23,10 +22,7 @@ class UserController extends Controller
   {
     $users = $this->db->table('users')->get()->getResult();
 
-    return $this->response->setJSON([
-      'success' => true,
-      'data'    => $users
-    ]);
+    return respondSuccess($this->response, $users);
   }
 
   /**
@@ -49,17 +45,14 @@ class UserController extends Controller
     $this->db->table('users')->insert($insert);
     $id = $this->db->insertID();
 
-    return $this->response->setJSON([
-      'success' => true,
-      'data'    => [
-        'id'        => $id,
-        'name'      => $insert['name'],
-        'email'     => $insert['email'],
-        'role'      => $insert['role'],
-        'status'    => $insert['status'],
-        'createdAt' => $insert['createdAt']
-      ]
-    ]);
+    return respondSuccess($this->response, [
+      'id'        => $id,
+      'name'      => $insert['name'],
+      'email'     => $insert['email'],
+      'role'      => $insert['role'],
+      'status'    => $insert['status'],
+      'createdAt' => $insert['createdAt']
+    ], null, 201);
   }
 
   /**
@@ -82,10 +75,7 @@ class UserController extends Controller
 
     $user = $this->db->table('users')->where('id', $id)->get()->getRow();
 
-    return $this->response->setJSON([
-      'success' => true,
-      'data'    => $user
-    ]);
+    return respondSuccess($this->response, $user);
   }
 
   /**
@@ -96,9 +86,6 @@ class UserController extends Controller
   {
     $this->db->table('users')->where('id', $id)->delete();
 
-    return $this->response->setJSON([
-      'success' => true,
-      'message' => 'User deleted successfully'
-    ]);
+    return respondSuccess($this->response, null, 'User deleted successfully');
   }
 }

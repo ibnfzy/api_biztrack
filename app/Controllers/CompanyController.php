@@ -2,11 +2,10 @@
 
 namespace App\Controllers;
 
-use CodeIgniter\Controller;
 use Config\Database;
 use DateTime;
 
-class CompanyController extends Controller
+class CompanyController extends BaseController
 {
     protected $db;
 
@@ -25,10 +24,7 @@ class CompanyController extends Controller
 
         $company = $company ? $this->formatCompany($company) : $this->defaultCompany();
 
-        return $this->response->setJSON([
-            'success' => true,
-            'data'    => $company,
-        ]);
+        return respondSuccess($this->response, $company);
     }
 
     /**
@@ -57,10 +53,10 @@ class CompanyController extends Controller
         if (empty($update)) {
             $company = $this->db->table('company_settings')->get()->getRowArray();
 
-            return $this->response->setJSON([
-                'success' => true,
-                'data'    => $company ? $this->formatCompany($company) : $this->defaultCompany(),
-            ]);
+        return respondSuccess(
+                        $this->response,
+                        $company ? $this->formatCompany($company) : $this->defaultCompany()
+                    );
         }
 
         $now     = (new DateTime())->format('Y-m-d H:i:s');
@@ -80,10 +76,10 @@ class CompanyController extends Controller
 
         $company = $table->where('id', $id)->get()->getRowArray();
 
-        return $this->response->setJSON([
-            'success' => true,
-            'data'    => $company ? $this->formatCompany($company) : $this->defaultCompany(),
-        ]);
+        return respondSuccess(
+            $this->response,
+            $company ? $this->formatCompany($company) : $this->defaultCompany()
+        );
     }
 
     private function formatCompany(array $company): array
