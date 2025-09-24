@@ -53,10 +53,10 @@ class CompanyController extends BaseController
         if (empty($update)) {
             $company = $this->db->table('company_settings')->get()->getRowArray();
 
-            return respondSuccess(
-                $this->response,
-                $company ? $this->formatCompany($company) : $this->defaultCompany()
-            );
+        return respondSuccess(
+                        $this->response,
+                        $company ? $this->formatCompany($company) : $this->defaultCompany()
+                    );
         }
 
         $now     = (new DateTime())->format('Y-m-d H:i:s');
