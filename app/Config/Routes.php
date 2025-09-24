@@ -49,3 +49,7 @@ $routes->get('laporan/permintaan', 'ReportsController::requests');
 $routes->get('laporan/pengiriman', 'ReportsController::deliveries');
 $routes->post('laporan', 'ReportsController::create');
 $routes->delete('laporan/(:segment)', 'ReportsController::delete/$1');
+
+// Company settings routes
+$routes->get('company', 'CompanyController::index');
+$routes->put('company', 'CompanyController::update');
