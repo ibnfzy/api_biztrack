@@ -7,6 +7,16 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Home::index');
 
+$routes->post('login', 'AuthController::login');
+$routes->post('logout', 'AuthController::logout');
+
+$routes->group('users', ['filter' => 'jwt'], function ($routes) {
+  $routes->get('/', 'UserController::index');
+  $routes->post('/', 'UserController::create');
+  $routes->put('(:num)', 'UserController::update/$1');
+  $routes->delete('(:num)', 'UserController::delete/$1');
+});
+
 // Barang routes
 $routes->get('barang', 'BarangController::index');
 $routes->post('barang', 'BarangController::create');
