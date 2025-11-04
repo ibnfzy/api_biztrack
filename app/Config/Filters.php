@@ -121,5 +121,10 @@ class Filters extends BaseFilters
                 'company/*'
             ],
         ],
+        'cors' => [
+            'before' => [
+                '/*'
+            ]
+        ]
     ];
 }

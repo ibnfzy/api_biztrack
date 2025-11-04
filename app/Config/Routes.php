@@ -16,6 +16,7 @@ $routes->group('users', ['filter' => 'jwt'], function ($routes) {
   $routes->put('(:num)', 'UserController::update/$1');
   $routes->delete('(:num)', 'UserController::delete/$1');
 });
+
 // Barang routes
 $routes->get('barang', 'BarangController::index');
 $routes->post('barang', 'BarangController::create');
