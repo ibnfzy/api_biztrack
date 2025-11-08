@@ -9,8 +9,9 @@ $routes->get('/', 'Home::index');
 
 $routes->post('login', 'AuthController::login');
 $routes->post('logout', 'AuthController::logout');
+$routes->options('(:any)', 'AuthController::options');
 
-$routes->group('users', ['filter' => 'jwt'], function ($routes) {
+$routes->group('users', function ($routes) {
   $routes->get('/', 'UserController::index');
   $routes->post('/', 'UserController::create');
   $routes->put('(:num)', 'UserController::update/$1');
@@ -31,7 +32,7 @@ $routes->delete('supplier/(:segment)', 'SupplierController::delete/$1');
 
 // Stock routes
 $routes->get('stok', 'StockController::index');
-$routes->put('stok', 'StockController::update');
+$routes->post('stok', 'StockController::update');
 
 // Permintaan routes
 $routes->get('permintaan', 'PermintaanController::index');
@@ -54,3 +55,10 @@ $routes->delete('laporan/(:segment)', 'ReportsController::delete/$1');
 // Company settings routes
 $routes->get('company', 'CompanyController::index');
 $routes->put('company', 'CompanyController::update');
+
+// Cabang
+$routes->get('cabang', 'CabangController::index');
+$routes->get('cabang/(:num)', 'CabangController::show/$1');
+$routes->post('cabang', 'CabangController::create');
+$routes->put('cabang/(:num)', 'CabangController::update/$1');
+$routes->delete('cabang/(:num)', 'CabangController::delete/$1');

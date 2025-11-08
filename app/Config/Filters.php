@@ -4,7 +4,7 @@ namespace Config;
 
 use App\Filters\JwtFilter;
 use CodeIgniter\Config\Filters as BaseFilters;
-use CodeIgniter\Filters\Cors;
+use App\Filters\Cors;
 use CodeIgniter\Filters\CSRF;
 use CodeIgniter\Filters\DebugToolbar;
 use CodeIgniter\Filters\ForceHTTPS;
@@ -74,13 +74,10 @@ class Filters extends BaseFilters
      */
     public array $globals = [
         'before' => [
-            // 'honeypot',
-            // 'csrf',
-            // 'invalidchars',
+            'cors',
         ],
-        'after' => [
-            // 'honeypot',
-            // 'secureheaders',
+        'after'  => [
+            //
         ],
     ];
 
@@ -120,11 +117,6 @@ class Filters extends BaseFilters
                 'laporan/*',
                 'company/*'
             ],
-        ],
-        'cors' => [
-            'before' => [
-                '/*'
-            ]
         ]
     ];
 }

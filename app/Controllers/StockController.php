@@ -16,15 +16,21 @@ class StockController extends BaseController
 
   /**
    * GET /stok
-   * Get stock information
+   * Get stock information (filtered per cabang)
    */
   public function index()
   {
-    $barangId = $this->request->getGet('barangId');
-    $builder  = $this->db->table('stok');
+    $barang_id = $this->request->getGet('barang_id');
+    $cabang_id = $this->request->getGet('cabang_id');
 
-    if (!empty($barangId)) {
-      $builder->where('barangId', $barangId);
+    $builder = $this->db->table('stok');
+
+    if (!empty($barang_id)) {
+      $builder->where('barang_id', $barang_id);
+    }
+
+    if (!empty($cabang_id)) {
+      $builder->where('cabang_id', $cabang_id);
     }
 
     $stocks = $builder->get()->getResult();
@@ -34,25 +40,35 @@ class StockController extends BaseController
 
   /**
    * PUT /stok
-   * Update stock
+   * Update or insert stock per cabang
    */
   public function update()
   {
     $data = $this->request->getJSON(true);
 
-    $barangId = $data['barangId'] ?? null;
-    $quantity = (int) ($data['quantity'] ?? 0);
-    $type     = $data['type'] ?? 'add';
+    $barang_id = $data['barang_id'] ?? null;
+    $cabang_id = $data['cabang_id'] ?? null;
+    $quantity  = (int) ($data['quantity'] ?? 0);
+    $type      = $data['type'] ?? 'add';
 
-    if (empty($barangId)) {
-      return respondBadRequest($this->response, 'barangId is required');
+    if (empty($barang_id)) {
+      return respondBadRequest($this->response, 'barang_id is required');
+    }
+
+    if (empty($cabang_id)) {
+      return respondBadRequest($this->response, 'cabang_id is required');
     }
 
     $builder = $this->db->table('stok');
-    $stock   = $builder->where('barangId', $barangId)->get()->getRowArray();
+    $stock   = $builder
+      ->where('barang_id', $barang_id)
+      ->where('cabang_id', $cabang_id)
+      ->get()
+      ->getRowArray();
 
     $now = (new DateTime())->format('Y-m-d H:i:s');
 
+    // jika stok sudah ada → update
     if ($stock) {
       $currentQuantity = (int) ($stock['quantity'] ?? 0);
 
@@ -62,22 +78,41 @@ class StockController extends BaseController
         $newQuantity = $currentQuantity + $quantity;
       }
 
-      $builder->where('barangId', $barangId)->update([
-        'quantity'    => $newQuantity,
-        'lastUpdated' => $now,
-      ]);
-    } else {
+      $builder
+        ->where('barang_id', $barang_id)
+        ->where('cabang_id', $cabang_id)
+        ->update([
+          'quantity'         => $newQuantity,
+          'terakhir_update'  => $now,
+          'barang_nama'      => $data['barang_nama'] ?? $stock['barang_nama'],
+          'supplier_id'      => $data['supplier_id'] ?? $stock['supplier_id'],
+          'catatan'          => $data['catatan'] ?? null,
+          'tanggal_masuk'    => $data['tanggal_masuk'] ?? date('Y-m-d'),
+        ]);
+    } 
+    // jika stok belum ada → insert baru
+    else {
       $newQuantity = $type === 'subtract' ? 0 : max(0, $quantity);
 
       $builder->insert([
-        'barangId'    => $barangId,
-        'quantity'    => $newQuantity,
-        'lastUpdated' => $now,
+        'barang_id'        => $barang_id,
+        'cabang_id'        => $cabang_id,
+        'barang_nama'      => $data['barang_nama'] ?? '-',
+        'supplier_id'      => $data['supplier_id'] ?? 0,
+        'quantity'         => $newQuantity,
+        'terakhir_update'  => $now,
+        'created_at'       => $now,
+        'catatan'          => $data['catatan'] ?? null,
+        'tanggal_masuk'    => $data['tanggal_masuk'] ?? date('Y-m-d'),
       ]);
     }
 
-    $updatedStock = $builder->where('barangId', $barangId)->get()->getRow();
+    $updatedStock = $builder
+      ->where('barang_id', $barang_id)
+      ->where('cabang_id', $cabang_id)
+      ->get()
+      ->getRow();
 
-    return respondSuccess($this->response, $updatedStock);
+    return respondSuccess($this->response, $updatedStock, 'Stok berhasil diperbarui.');
   }
 }

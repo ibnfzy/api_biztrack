@@ -20,7 +20,7 @@ class SupplierController extends BaseController
    */
   public function index()
   {
-    $suppliers = $this->db->table('supplier')->get()->getResult();
+    $suppliers = $this->db->table('suppliers')->get()->getResult();
 
     return respondSuccess($this->response, $suppliers);
   }
@@ -42,14 +42,14 @@ class SupplierController extends BaseController
       'email'     => $data['email'] ?? null,
       'telepon'   => $data['telepon'] ?? null,
       'status'    => 'active',
-      'createdAt' => $now,
-      'updatedAt' => $now,
+      'created_at' => $now,
+      'updated_at' => $now,
     ];
 
-    $this->db->table('supplier')->insert($insert);
+    $this->db->table('suppliers')->insert($insert);
     $id = $this->db->insertID();
 
-    $supplier = $this->db->table('supplier')->where('id', $id)->get()->getRow();
+    $supplier = $this->db->table('suppliers')->where('id', $id)->get()->getRow();
 
     return respondSuccess($this->response, $supplier, null, 201);
   }
@@ -70,11 +70,11 @@ class SupplierController extends BaseController
     if (array_key_exists('telepon', $data)) $update['telepon'] = $data['telepon'];
     if (array_key_exists('status', $data)) $update['status'] = $data['status'];
 
-    $update['updatedAt'] = (new DateTime())->format('Y-m-d H:i:s');
+    $update['updated_at'] = (new DateTime())->format('Y-m-d H:i:s');
 
-    $this->db->table('supplier')->where('id', $id)->update($update);
+    $this->db->table('suppliers')->where('id', $id)->update($update);
 
-    $supplier = $this->db->table('supplier')->where('id', $id)->get()->getRow();
+    $supplier = $this->db->table('suppliers')->where('id', $id)->get()->getRow();
 
     return respondSuccess($this->response, $supplier);
   }
@@ -85,7 +85,7 @@ class SupplierController extends BaseController
    */
   public function delete($id)
   {
-    $this->db->table('supplier')->where('id', $id)->delete();
+    $this->db->table('suppliers')->where('id', $id)->delete();
 
     return respondSuccess($this->response, null, 'Supplier deleted successfully');
   }

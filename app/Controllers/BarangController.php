@@ -31,30 +31,29 @@ class BarangController extends BaseController
    */
   public function create()
   {
-    $data = $this->request->getJSON(true);
+        $data = $this->request->getJSON(true);
+        $now = (new DateTime())->format('Y-m-d H:i:s');
 
-    $now = (new DateTime())->format('Y-m-d H:i:s');
+        $insert = [
+            'kode'           => $data['kode'] ?? '',
+            'nama'           => $data['nama'] ?? '',
+            'kategori'       => $data['kategori'] ?? '',
+            'satuan'         => $data['satuan'] ?? '',
+            'harga'          => $data['harga'] ?? 0,
+            'supplier_id'    => $data['supplier_id'] ?? 0,
+            'stok_minimal'   => $data['stok_minimal'] ?? 0,
+            'deskripsi'      => $data['deskripsi'] ?? '',
+            'created_at'     => $now,
+            'updated_at'     => $now,
+        ];
 
-    $insert = [
-      'kode'       => $data['kode'] ?? null,
-      'nama'       => $data['nama'] ?? null,
-      'kategori'   => $data['kategori'] ?? null,
-      'satuan'     => $data['satuan'] ?? null,
-      'harga'      => $data['harga'] ?? 0,
-      'supplier'   => $data['supplier'] ?? null,
-      'stokMinimal'=> $data['stokMinimal'] ?? 0,
-      'deskripsi'  => $data['deskripsi'] ?? null,
-      'createdAt'  => $now,
-      'updatedAt'  => $now,
-    ];
+        $this->db->table('barang')->insert($insert);
+        $id = $this->db->insertID();
 
-    $this->db->table('barang')->insert($insert);
-    $id = $this->db->insertID();
+        $item = $this->db->table('barang')->where('id', $id)->get()->getRow();
 
-    $item = $this->db->table('barang')->where('id', $id)->get()->getRow();
-
-    return respondSuccess($this->response, $item, null, 201);
-  }
+        return respondSuccess($this->response, $item, null, 201);
+   }
 
   /**
    * PUT /barang/{id}
@@ -62,26 +61,27 @@ class BarangController extends BaseController
    */
   public function update($id)
   {
-    $data = $this->request->getJSON(true);
+        $data = $this->request->getJSON(true);
+        $update = [];
 
-    $update = [];
-    if (array_key_exists('kode', $data)) $update['kode'] = $data['kode'];
-    if (array_key_exists('nama', $data)) $update['nama'] = $data['nama'];
-    if (array_key_exists('kategori', $data)) $update['kategori'] = $data['kategori'];
-    if (array_key_exists('satuan', $data)) $update['satuan'] = $data['satuan'];
-    if (array_key_exists('harga', $data)) $update['harga'] = $data['harga'];
-    if (array_key_exists('supplier', $data)) $update['supplier'] = $data['supplier'];
-    if (array_key_exists('stokMinimal', $data)) $update['stokMinimal'] = $data['stokMinimal'];
-    if (array_key_exists('deskripsi', $data)) $update['deskripsi'] = $data['deskripsi'];
+        if (array_key_exists('kode', $data))         $update['kode'] = $data['kode'] ?? '';
+        if (array_key_exists('nama', $data))         $update['nama'] = $data['nama'] ?? '';
+        if (array_key_exists('kategori', $data))     $update['kategori'] = $data['kategori'] ?? '';
+        if (array_key_exists('satuan', $data))       $update['satuan'] = $data['satuan'] ?? '';
+        if (array_key_exists('harga', $data))        $update['harga'] = $data['harga'] ?? 0;
+        if (array_key_exists('supplier_id', $data))  $update['supplier_id'] = $data['supplier_id'] ?? 0;
+        if (array_key_exists('stok_minimal', $data)) $update['stok_minimal'] = $data['stok_minimal'] ?? 0;
+        if (array_key_exists('deskripsi', $data))    $update['deskripsi'] = $data['deskripsi'] ?? '';
 
-    $update['updatedAt'] = (new DateTime())->format('Y-m-d H:i:s');
+        $update['updated_at'] = (new DateTime())->format('Y-m-d H:i:s');
 
-    $this->db->table('barang')->where('id', $id)->update($update);
+        $this->db->table('barang')->where('id', $id)->update($update);
 
-    $item = $this->db->table('barang')->where('id', $id)->get()->getRow();
+        $item = $this->db->table('barang')->where('id', $id)->get()->getRow();
 
-    return respondSuccess($this->response, $item);
-  }
+        return respondSuccess($this->response, $item);
+   }
+
 
   /**
    * DELETE /barang/{id}

@@ -27,9 +27,9 @@ class Database extends Config
     public array $default = [
         'DSN'          => '',
         'hostname'     => 'localhost',
-        'username'     => 'root',
-        'password'     => '',
-        'database'     => 'api_biztrack',
+        'username'     => 'jultdevs_alim',
+        'password'     => 'hx5yxH7ATEnydb6chNJq',
+        'database'     => 'jultdevs_alim',
         'DBDriver'     => 'MySQLi',
         'DBPrefix'     => '',
         'pConnect'     => false,

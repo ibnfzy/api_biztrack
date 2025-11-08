@@ -20,7 +20,7 @@ class JwtFilter implements FilterInterface
     {
         $this->config = Configuration::forSymmetricSigner(
             new \Lcobucci\JWT\Signer\Hmac\Sha256(),
-            \Lcobucci\JWT\Signer\Key\InMemory::plainText('your-secret-key')
+            \Lcobucci\JWT\Signer\Key\InMemory::plainText('biztrack')
         );
     }
 
