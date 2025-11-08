@@ -31,7 +31,9 @@ class PermintaanController extends BaseController
 
         foreach ($requests as &$request) {
             $items = $this->db->table('permintaan_items')
+                ->select('permintaan_items.*, barang.nama as barang_nama')
                 ->where('permintaan_id', $request['id'])
+                ->join('barang', 'permintaan_items.barang_id=barang.id')
                 ->get()
                 ->getResultArray();
 

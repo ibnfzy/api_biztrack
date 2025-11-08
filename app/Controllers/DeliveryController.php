@@ -32,7 +32,9 @@ class DeliveryController extends BaseController
 
         foreach ($deliveries as &$delivery) {
             $items = $this->db->table('pengiriman_items')
+                ->select('pengiriman_items.*, barang.nama as barang_nama')
                 ->where('pengiriman_id', $delivery['id'])
+                ->join('barang', 'pengiriman_items.barang_id=barang.id')
                 ->get()
                 ->getResultArray();
 
